@@ -10,7 +10,7 @@ config.py: Config objects store video
 """
 
 
-class Config:
+class TechnicalMemeConfig:
 	def __init__(self, video_filename, filename):
 		self.video_filename = video_filename
 		self.filename = filename
