@@ -9,12 +9,12 @@
 techmeme.py: CLI app to turn videos into dank technical may-mays
 """
 
-import moviepy.video
+import moviepy.video.VideoClip
 
 from config import TechnicalMemeConfig
 
 
-class TechnicalMeme(moviepy.video.VideoClip):
+class TechnicalMeme(moviepy.video.VideoClip.VideoClip):
 	def __init__(self, *, source_filename, config):
 		self.source_filename = source_filename
 		self.config = config
