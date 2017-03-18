@@ -11,8 +11,7 @@ config.py: Config objects store video
 
 
 class TechnicalMemeConfig:
-	def __init__(self, video_filename, filename):
-		self.video_filename = video_filename
+	def __init__(self, filename):
 		self.filename = filename
 		
 		self.parse_config()
