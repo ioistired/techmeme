@@ -25,12 +25,20 @@ class TechnicalMemeConfigTests(unittest.TestCase):
 	def test_parsed_attributes(self):
 		"""test the attributes that do need to be parsed"""
 		self.assertEqual(self.config.multiplier, 1.05)
+		# <https://github.com/WonderJ13/We-Are-Number-One-Meme-Generator/blob/master/main.py>
 		self.assertEqual(self.config.timestamps, [
-			1.4142135623730951,
-			3.141592653589793,
-			5.0,
-			26.3,
-			69.420,
+			39.21739,
+			45.21739,
+			56.91304,
+			77.91304,
+			83.69565,
+			91.086956,
+			132.60869,
+			139.30434,
+			156.30434,
+			162.30434,
+			163.82608,
+			165.30434,
 		])
 
 if __name__ == '__main__':
