@@ -6,7 +6,7 @@
 #
 
 """
-techmeme.py: CLI app to turn videos into dank technical may-mays
+techmeme.py: class that turns videos into dank technical may-mays
 """
 
 from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
@@ -61,5 +61,3 @@ class TechnicalMeme(CompositeVideoClip):
 				self._write_subclip(timestamp_number)
 			except ValueError:
 				raise
-
-
