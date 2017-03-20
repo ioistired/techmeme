@@ -16,7 +16,7 @@ from .config import TechnicalMemeConfig
 
 
 class TechnicalMeme:
-	def __init__(self, *, source_filename, config_filename):
+	def __init__(self, source_filename, config_filename):
 		self.source_video = VideoFileClip(source_filename)
 		self.config = TechnicalMemeConfig(config_filename)
 		self._fix_up_timestamps()
