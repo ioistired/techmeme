@@ -13,7 +13,7 @@ from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.fx.speedx import speedx
 
-from config import TechnicalMemeConfig
+from .config import TechnicalMemeConfig
 
 
 class TechnicalMeme(CompositeVideoClip):
