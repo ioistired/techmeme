@@ -9,14 +9,13 @@
 techmeme: class that turns videos into dank technical may-mays
 """
 
-from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.fx.speedx import speedx
 
 from .config import TechnicalMemeConfig
 
 
-class TechnicalMeme(CompositeVideoClip):
+class TechnicalMeme:
 	def __init__(self, *, source_filename, config_filename):
 		self.source_video = VideoFileClip(source_filename)
 		self.config = TechnicalMemeConfig(config_filename)
