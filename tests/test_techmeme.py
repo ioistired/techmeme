@@ -9,8 +9,9 @@
 tests/test_techmeme.py: Unit tests for TechnicalMeme class
 """
 
+from shutil import rmtree # this and tempfile should be handled
+import tempfile # by techmeme itself but not atm
 import unittest
-import tempfile
 
 from techmeme import TechnicalMeme
 
@@ -20,3 +21,6 @@ class TechnicalMemeTests(unittest.TestCase):
 		# make a temp dir for storing the video parts
 		self.tmpdir = tempfile.mkdtemp(prefix="techmeme")
 		self.meme = TechnicalMeme("WANO.mp4", "sample_config.txt")
+		
+	def tearDown(self):
+		rmtree(self.tmpdir)
