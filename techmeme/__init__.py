@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # encoding: utf-8
-# 
+#
 # © 2017 Benjamin Mintz
 # https://bmintz.mit-license.org/@2017
 #
@@ -8,6 +8,8 @@
 """
 techmeme: class that turns videos into dank technical may-mays
 """
+
+import os
 
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.VideoClip import VideoClip
@@ -51,10 +53,68 @@ class TechnicalMeme:
 					.format(timestamp_number))
 		except ValueError:
 			raise
+		# moviepy is buggy and often returns index errors (raised as OSErrors)
+		# when trying to save the last clip
+		except OSError as ex:
+			print(ex)
+	
 	
 	def _write_all_subclips(self):
 		for timestamp_number in range(len(self.config.timestamps)):
+			
+			print("{}...".format(timestamp_number), end=" ")
+			
 			try:
 				self._write_subclip(timestamp_number)
 			except ValueError:
+				print("failed!")
+				raise
+			else:
+				print("done.")
+	
+	
+	def _silence(self, func, *args, **kwargs):
+		"""silence the output of func(*args, **kwargs)"""
+		
+		import sys
+		
+		# save a copy of out and err so we can restore them later
+		# TODO: see if this is necessary
+		stdout, stderr = sys.stdout, sys.stderr
+		
+		sys.stdout = open(os.devnull, 'w')
+		sys.stderr = open(os.devnull, 'w')
+		
+		try:
+			func(*args, **kwargs)
+			sys.stdout, sys.stderr = stdout, stderr
+		except:
+			raise
+	
+	
+	def save(self, output_name):
+		import pathlib
+	
+		try:
+			self._write_all_subclips()
+		except:
+			raise
+		
+		with open("TMP_techmeme_concat_list.txt", "w") as ffmpeg_config:
+			for i in range(len(self.config.timestamps)):
+				filename = './TMP_techmeme_{}.mp4'.format(i)
+				
+				# if there was an error saving the video
+				# (again, usually the last one)
+				# so only build the concat list out of existing files
+				try:
+					with open(filename): # don't care about the file itself, only if it exists
+						ffmpeg_config.write("file '{}'".format(filename))
+				except OSError:
+					pass
+			
+		
+			try:
+				os.system("ffmpeg -safe 0 -f concat -i {} -c copy {}".format(ffmpeg_config.name, output_name))
+			except:
 				raise
