@@ -45,3 +45,10 @@ class TechnicalMemeTests(unittest.TestCase):
 		
 		# the third subclip should have length timestamps[4] - timestamps[3]
 		self.assertEqual(subclip_3.end, 77.91304 - 56.91304)
+	
+	def test_get_sped_up_subclip(self):
+		sped_up_subclip_3 = self.meme._get_sped_up_subclip(3)
+		self.assertIsInstance(sped_up_subclip_3, VideoFileClip)
+		
+		# speedup is 1.05 so each clip is progressively 0.95× slower
+		self.assertEqual(sped_up_subclip_3.end, (77.91304 - 56.91304) * 0.95**3)
