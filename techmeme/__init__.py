@@ -32,17 +32,17 @@ class TechnicalMeme:
 	def _get_subclip(self, timestamp_number):
 		"""get a subclip at the timestamp given by self.config.timestamps[timestamp_number]"""
 		
-		if timestamp_number < len(self.config.timestamps):
+		if 0 <= timestamp_number < len(self.config.timestamps):
 			return self.source_video.subclip(*self.config.timestamps[timestamp_number:timestamp_number+2])
 		else:
-			raise ValueError("timestamp number too large")
+			raise IndexError("timestamp number out of range")
 	
 	
 	def _get_sped_up_subclip(self, timestamp_number):
 		try:
 			return self._get_subclip(timestamp_number)\
 				.fx(speedx, self.config.multiplier**timestamp_number)
-		except ValueError:
+		except:
 			raise
 	
 	
@@ -51,7 +51,7 @@ class TechnicalMeme:
 			self._get_sped_up_subclip(timestamp_number)\
 				.write_videofile("TMP_techmeme_{}.mp4"
 					.format(timestamp_number))
-		except ValueError:
+		except IndexError:
 			raise
 		# moviepy is buggy and often returns index errors (raised as OSErrors)
 		# when trying to save the last clip
@@ -66,7 +66,7 @@ class TechnicalMeme:
 			
 			try:
 				self._write_subclip(timestamp_number)
-			except ValueError:
+			except IndexError:
 				print("failed!")
 				raise
 			else:
