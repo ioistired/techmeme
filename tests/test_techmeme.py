@@ -21,8 +21,8 @@ from techmeme.config import TechnicalMemeConfig
 class TechnicalMemeTests(unittest.TestCase):
 	def setUp(self):
 		# make a temp dir for storing the video parts
-		self.tmpdir = tempfile.mkdtemp(prefix="techmeme")
-		self.meme = TechnicalMeme("WANO.mp4", "sample_config.txt")
+		self.tmpdir = tempfile.mkdtemp(prefix="techmeme", dir="tests")
+		self.meme = TechnicalMeme("tests/WANO.mp4", "tests/sample_config.txt")
 	
 	def tearDown(self):
 		rmtree(self.tmpdir)
