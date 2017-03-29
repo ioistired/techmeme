@@ -34,3 +34,14 @@ class TechnicalMemeTests(unittest.TestCase):
 	def test_fix_up_timestamps(self):
 		self.assertEqual(self.meme.config.timestamps[0], 0)
 		self.assertEqual(self.meme.config.timestamps[-1], self.meme.source_video.end)
+	
+	def test_get_subclip(self):
+		# get the clip that goes from the 3rd "one" to the 4th "one"
+		# even though array indexes start at 0, subclips[3] is still the third
+		# "one" because the first timestamp is 0 and so the first subclip contains
+		# no "one"s
+		subclip_3 = self.meme._get_subclip(3)
+		self.assertIsInstance(subclip_3, VideoFileClip)
+		
+		# the third subclip should have length timestamps[4] - timestamps[3]
+		self.assertEqual(subclip_3.end, 77.91304 - 56.91304)
