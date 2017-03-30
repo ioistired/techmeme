@@ -9,8 +9,13 @@
 tests/test_techmeme.py: Unit tests for TechnicalMeme class
 """
 
-from shutil import rmtree # this and tempfile should be handled
-import tempfile # by techmeme itself but not atm
+# tmp (directory|file) removal should be handled
+# by techmeme itself but not atm
+from shutil import rmtree 
+from os import remove
+import tempfile
+from glob import glob
+
 import unittest
 
 from moviepy.video.io.VideoFileClip import VideoFileClip
@@ -23,10 +28,12 @@ class TechnicalMemeTests(unittest.TestCase):
 		# make a temp dir for storing the video parts
 		self.tmpdir = tempfile.mkdtemp(prefix="techmeme", dir="tests")
 		self.meme = TechnicalMeme("tests/WANO.mp4", "tests/sample_config.txt")
-	
+		
 	def tearDown(self):
 		rmtree(self.tmpdir)
-	
+		for tmpfile in glob("TMP_techmeme*"):
+			os.remove(tmpfile)
+		
 	def test_attributes(self):
 		self.assertIsInstance(self.meme.source_video, VideoFileClip)
 		self.assertIsInstance(self.meme.config, TechnicalMemeConfig)
@@ -51,12 +58,25 @@ class TechnicalMemeTests(unittest.TestCase):
 			self.meme._get_subclip(12)
 	
 	def test_get_sped_up_subclip(self):
+		# we'll be using the sped up subclip for comparison
+		# so save the subclip object for later
 		sped_up_subclip_3 = self.meme._get_sped_up_subclip(3)
 		self.assertIsInstance(sped_up_subclip_3, VideoFileClip)
 		
 		# speedup is 1.05 so each clip is progressively 0.95× slower
-		# also floats aren't too accurate so as long as the clip is about right
+		# also floats aren't too accurate, so as long as the clip is about right
 		# it's cool
 		self.assertAlmostEqual(sped_up_subclip_3.end,
 				(77.91304 - 56.91304) * 0.95**3,
-				delta=0.2)
+				delta=0.2,
+		)
+	
+	def test_write_subclip(self):
+		sped_up_subclip_6 = self.meme._get_sped_up_subclip(6)
+		
+		self.meme._write_subclip(6)
+		self.assertAlmostEqual(
+				VideoFileClip("TMP_techmeme_6.mp4").end,
+				sped_up_subclip_6.end,
+				delta=0.2,
+		)
