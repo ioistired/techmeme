@@ -10,6 +10,7 @@ tests/config.py: Unit tests for config.py
 """
 
 import unittest
+import os.path
 
 from techmeme.config import TechnicalMemeConfig
 
@@ -40,6 +41,11 @@ class TechnicalMemeConfigTests(unittest.TestCase):
 			163.82608,
 			165.30434,
 		])
+		
+		# since the absolute path may change, just assert that the video filename is correct
+		# and assume that the base directory is correct
+		# also use any kind of path separator (stupid Windows)
+		self.assertIn(os.path.relpath(self.config.source_filename), ("tests/WANO.mp4", r"tests\WANO.mp4"))
 
 if __name__ == '__main__':
 	import sys
