@@ -32,7 +32,7 @@ class TechnicalMemeTests(unittest.TestCase):
 	def tearDown(self):
 		rmtree(self.tmpdir)
 		for tmpfile in glob("TMP_techmeme*"):
-			os.remove(tmpfile)
+			remove(tmpfile)
 		
 	def test_attributes(self):
 		self.assertIsInstance(self.meme.source_video, VideoFileClip)
@@ -80,3 +80,13 @@ class TechnicalMemeTests(unittest.TestCase):
 				sped_up_subclip_6.end,
 				delta=0.2,
 		)
+	
+	def test_write_all_subclips(self):
+		"""
+		test that the code can properly write *every* single subclip.
+		this can take a while...
+		"""
+		
+		self.meme._write_all_subclips()
+		# make sure 14 mp4 files were written
+		self.assertEqual(len(glob("TMP_techmeme*.mp4")), 13)
