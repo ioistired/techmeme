@@ -12,7 +12,7 @@ tests/test_techmeme.py: Unit tests for TechnicalMeme class
 # tmp (directory|file) removal should be handled
 # by techmeme itself but not atm
 from shutil import rmtree 
-from os import remove
+import os
 import tempfile
 from glob import glob
 
@@ -27,13 +27,16 @@ class TechnicalMemeTests(unittest.TestCase):
 	def setUp(self):
 		# make a temp dir for storing the video parts
 		self.tmpdir = tempfile.mkdtemp(prefix="techmeme", dir="tests")
-		self.meme = TechnicalMeme("tests/WANO.mp4", "tests/sample_config.txt")
+		self.meme = TechnicalMeme("tests/sample_config.txt")
 		
 	def tearDown(self):
 		rmtree(self.tmpdir)
 		for tmpfile in glob("TMP_techmeme*"):
-			os.remove(tmpfile)
-		
+			try:
+				os.remove(tmpfile)
+			except:
+				pass
+	
 	def test_attributes(self):
 		self.assertIsInstance(self.meme.source_video, VideoFileClip)
 		self.assertIsInstance(self.meme.config, TechnicalMemeConfig)
