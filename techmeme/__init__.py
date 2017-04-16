@@ -73,25 +73,6 @@ class TechnicalMeme:
 				print("done.")
 	
 	
-	def _silence(self, func, *args, **kwargs):
-		"""silence the output of func(*args, **kwargs)"""
-		
-		import sys
-		
-		# save a copy of out and err so we can restore them later
-		# TODO: see if this is necessary
-		stdout, stderr = sys.stdout, sys.stderr
-		
-		sys.stdout = open(os.devnull, 'w')
-		sys.stderr = open(os.devnull, 'w')
-		
-		try:
-			func(*args, **kwargs)
-			sys.stdout, sys.stderr = stdout, stderr
-		except:
-			raise
-	
-	
 	def save(self, output_name):
 		import pathlib
 	
