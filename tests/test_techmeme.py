@@ -92,5 +92,5 @@ class TechnicalMemeTests(unittest.TestCase):
 		"""
 		
 		self.meme._write_all_subclips()
-		# make sure 14 mp4 files were written
+		# make sure 13 mp4 files were written
 		self.assertEqual(len(glob("TMP_techmeme*.mp4")), 13)
