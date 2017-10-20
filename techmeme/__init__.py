@@ -11,17 +11,16 @@ techmeme: class that turns videos into dank technical may-mays
 
 import os
 
-from moviepy.video.io.VideoFileClip import VideoFileClip
-from moviepy.video.VideoClip import VideoClip
-from moviepy.video.fx.speedx import speedx
+from moviepy.video.io.VideoFileClip import VideoFileClip as _VideoFileClip
+from moviepy.video.fx.speedx import speedx as _speedx
 
-from .config import TechnicalMemeConfig
+from .config import TechnicalMemeConfig as _TechnicalMemeConfig
 
 
 class TechnicalMeme:
 	def __init__(self, config_filename):
-		self.config = TechnicalMemeConfig(config_filename)
-		self.source_video = VideoFileClip(self.config.source_filename)
+		self.config = _TechnicalMemeConfig(config_filename)
+		self.source_video = _VideoFileClip(self.config.source_filename)
 		self._fix_up_timestamps()
 	
 	
@@ -41,7 +40,7 @@ class TechnicalMeme:
 	def _get_sped_up_subclip(self, timestamp_number):
 		try:
 			return self._get_subclip(timestamp_number)\
-				.fx(speedx, self.config.multiplier**timestamp_number)
+				.fx(_speedx, self.config.multiplier**timestamp_number)
 		except:
 			raise
 	
