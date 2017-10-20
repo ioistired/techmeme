@@ -10,6 +10,7 @@ techmeme: class that turns videos into dank technical may-mays
 """
 
 import os
+from subprocess import Popen
 
 from moviepy.video.io.VideoFileClip import VideoFileClip as _VideoFileClip
 from moviepy.video.fx.speedx import speedx as _speedx
@@ -18,6 +19,9 @@ from .config import TechnicalMemeConfig as _TechnicalMemeConfig
 
 
 class TechnicalMeme:
+	
+	_FFMPEG_CONCAT_LIST_FILENAME = 'TMP_techmeme_concat_list.txt'
+	
 	def __init__(self, config_filename):
 		self.config = _TechnicalMemeConfig(config_filename)
 		self.source_video = _VideoFileClip(self.config.source_filename)
@@ -73,28 +77,41 @@ class TechnicalMeme:
 	
 	
 	def save(self, output_name):
-		import pathlib
 	
 		try:
 			self._write_all_subclips()
+			self._write_ffmpeg_concat_config()
+			self._concat_clips(output_name)
 		except:
 			raise
+	
+	
+	def _write_ffmpeg_concat_config(self):
+		ffmpeg_config = open(self._FFMPEG_CONCAT_LIST_FILENAME, 'w')
 		
-		with open("TMP_techmeme_concat_list.txt", "w") as ffmpeg_config:
-			for i in range(len(self.config.timestamps)):
-				filename = './TMP_techmeme_{}.mp4'.format(i)
-				
-				# if there was an error saving the video
-				# (again, usually the last one)
-				# so only build the concat list out of existing files
-				try:
-					with open(filename): # don't care about the file itself, only if it exists
-						ffmpeg_config.write("file '{}'".format(filename))
-				except OSError:
-					pass
+		for i in range(len(self.config.timestamps)):
+			filename = './TMP_techmeme_{}.mp4'.format(i)
 			
-		
+			# if there was an error saving the video
+			# (again, usually the last one)
+			# so only build the concat list out of existing files
 			try:
-				os.system("ffmpeg -safe 0 -f concat -i {} -c copy {}".format(ffmpeg_config.name, output_name))
-			except:
-				raise
+				with open(filename): # don't care about the file itself, only if it exists
+					ffmpeg_config.write("file '{}'\n".format(filename))
+			except OSError:
+				pass
+		
+		ffmpeg_config.close()
+	
+	
+	def _concat_clips(self, output_name):
+		Popen(['ffmpeg',
+				'-safe',
+				'0',
+				'-f',
+				'concat',
+				'-i',
+				self._FFMPEG_CONCAT_LIST_FILENAME,
+				'-c',
+				'copy',
+				output_name])
