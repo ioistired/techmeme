@@ -53,13 +53,11 @@ class TechnicalMeme:
 	def _write_subclip(self, timestamp_number):
 		try:
 			self._get_sped_up_subclip(timestamp_number)\
-				.write_videofile("TMP_techmeme_{}.mp4"
-					.format(timestamp_number))
-		except IndexError:
-			raise
-		# moviepy is buggy and often returns index errors (raised as OSErrors)
+			    .write_videofile("TMP_techmeme_{}.mp4"
+			    .format(timestamp_number))
+		# moviepy is buggy and often returns index errors
 		# when trying to save the last clip
-		except OSError as ex:
+		except IndexError as ex:
 			print(ex)
 
 
