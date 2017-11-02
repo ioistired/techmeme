@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-import os.path
+import os
 from subprocess import Popen
+import tempfile
+from shutil import rmtree
 
 from moviepy.video.io.VideoFileClip import VideoFileClip as _VideoFileClip
 from moviepy.video.fx.speedx import speedx as _speedx
@@ -33,14 +35,12 @@ class TechnicalMeme:
 		else:
 			raise IndexError("timestamp number out of range")
 
-
 	def _get_sped_up_subclip(self, timestamp_number):
 		try:
 			return self._get_subclip(timestamp_number)\
 				.fx(_speedx, self.config.multiplier**timestamp_number)
 		except:
 			raise
-
 
 	def _write_subclip(self, timestamp_number):
 		try:
@@ -52,26 +52,23 @@ class TechnicalMeme:
 		except IndexError as ex:
 			print(ex)
 
-
 	def _write_all_subclips(self):
 		for timestamp_number in range(len(self.config.timestamps)):
-
-			print("{}...".format(timestamp_number), end=" ")
-
 			try:
 				self._write_subclip(timestamp_number)
 			except IndexError:
-				print("failed!")
 				raise
-			else:
-				print("done.")
-
 
 	def save(self, output_name):
-		self._write_all_subclips()
-		self._write_ffmpeg_concat_config()
-		self._concat_clips(output_name)
+		tmpdir = tempfile.mkdtemp(prefix='techmeme_')
+		os.chdir(tmpdir)
 
+		try:
+			self._write_all_subclips()
+			self._write_ffmpeg_concat_config()
+			self._concat_clips(output_name)
+		finally:
+			rmtree(tmpdir)
 
 	def _write_ffmpeg_concat_config(self):
 		ffmpeg_config = open(self._FFMPEG_CONCAT_LIST_FILENAME, 'w')
@@ -90,8 +87,8 @@ class TechnicalMeme:
 
 		ffmpeg_config.close()
 
-
 	def _concat_clips(self, output_name):
+		print(os.getcwd())
 		Popen(['ffmpeg',
 		       '-safe',
 		       '0',
