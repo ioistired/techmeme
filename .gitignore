@@ -1,6 +1,7 @@
-# temporary video parts
+# videos
 TMP_techmeme*
 .techmeme_temp/
+*.mp4
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

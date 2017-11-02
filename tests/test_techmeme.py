@@ -25,19 +25,8 @@ from techmeme.config import TechnicalMemeConfig
 
 class TechnicalMemeTests(unittest.TestCase):
 	def setUp(self):
-		# make a temp dir for storing the video parts
-		self.tmpdir = tempfile.mkdtemp(prefix="techmeme", dir="tests")
 		self.meme = TechnicalMeme("tests/sample_config.txt")
-		
-	def tearDown(self):
-		rmtree(self.tmpdir)
-		for tmpfile in glob("TMP_techmeme*"):
-		
-			try:
-				os.remove(tmpfile)
-			except:
-				pass
-	
+
 	def test_attributes(self):
 		self.assertIsInstance(self.meme.source_video, VideoFileClip)
 		self.assertIsInstance(self.meme.config, TechnicalMemeConfig)
