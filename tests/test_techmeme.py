@@ -11,7 +11,7 @@ tests/test_techmeme.py: Unit tests for TechnicalMeme class
 
 # tmp (directory|file) removal should be handled
 # by techmeme itself but not atm
-from shutil import rmtree 
+from shutil import rmtree
 import os
 import tempfile
 from glob import glob
